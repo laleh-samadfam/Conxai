@@ -34,5 +34,3 @@ def missing_data(self):
     with open("missing_in_folders.txt", "w") as output:
         for item in missing_in_folders:
             output.write(item + '\n')
-
-
