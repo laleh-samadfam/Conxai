@@ -1,26 +1,50 @@
+import os
+import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+import re
 
-# Assume X contains features and y contains labels
 
-# Generate sample data (replace with your actual data)
-X = np.random.random((100, 10))  # Example: 100 samples, 10 features
-y = np.random.randint(0, 3, 100)  # Example: 3 classes
+def parse_filename(file_name):
+    pattern = r'cam(\d)_f(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\.jpg_(\d+)\.png'
 
-# Split the data into training, validation, and test sets with stratified sampling
-X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+    match = re.match(pattern, file_name)
 
-X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=42)
+    if match:
+        c = int(match.group(1))
+        t = match.group(2)
+        j = int(match.group(3))
+        return c, t, j
+    else:
+        return None
 
-# Print the class distribution in each set
-print("Class distribution in the original dataset:")
-print(np.bincount(y) / len(y))
 
-print("Class distribution in the training set:")
-print(np.bincount(y_train) / len(y_train))
+def split_task1():
+    label_path = '../../data/processed_data/clean_labels.csv'
+    data_folder_path = '../../data/raw data/foundation_images'
+    clean_data_path = '../../data/processed_data/Task1'
 
-print("Class distribution in the validation set:")
-print(np.bincount(y_val) / len(y_val))
 
-print("Class distribution in the test set:")
-print(np.bincount(y_test) / len(y_test))
+    # Load image names from the CSV file
+    df = pd.read_csv(label_path)
+
+    for index, row in df.iterrows():
+        image_name = row['image_name']
+        camera_id = row['c']
+        camera = 'cam_0'+ str(camera_id)
+        label = row['label']
+        split = row['split']
+
+        # Construct source and destination paths
+        source_path = os.path.join(data_folder_path, camera, image_name)
+        destination_path = os.path.join(clean_data_path, split, label)
+
+        # Create the destination directory if it doesn't exist
+        os.makedirs(destination_path, exist_ok=True)
+
+        # Move the file to the appropriate directory
+        os.rename(source_path, os.path.join(destination_path, image_name))
+
+
+if __name__ == '__main__':
+    split_task1()
+

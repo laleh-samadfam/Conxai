@@ -14264,6 +14264,7 @@ a.anchor-link {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">walk</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
 </pre></div>
 
      </div>
@@ -14277,7 +14278,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">laleh</span><span class="o">/</span><span class="n">PycharmProjects</span><span class="o">/</span><span class="n">conxai</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">laleh</span><span class="o">/</span><span class="n">PycharmProjects</span><span class="o">/</span><span class="n">Conxai</span><span class="o">/</span><span class="n">Conxai</span>
 </pre></div>
 
      </div>
@@ -14297,7 +14298,7 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>/home/laleh/PycharmProjects/conxai
+<pre>/home/laleh/PycharmProjects/Conxai/Conxai
 </pre>
 </div>
 </div>
@@ -14873,10 +14874,10 @@ Name: label, dtype: int64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/processed data/clean_labels.csv&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>
@@ -14887,10 +14888,799 @@ Name: label, dtype: int64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">parse_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;cam(\d)_f(\d</span><span class="si">{4}</span><span class="s1">-\d</span><span class="si">{2}</span><span class="s1">-\d</span><span class="si">{2}</span><span class="s1">T\d</span><span class="si">{2}</span><span class="s1">:\d</span><span class="si">{2}</span><span class="s1">:\d</span><span class="si">{2}</span><span class="s1">\.\d</span><span class="si">{3}</span><span class="s1">Z)\.jpg_(\d+)\.png&#39;</span>
+
+    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">:</span> <span class="n">j</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parsed_info</span> <span class="o">=</span> <span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;image_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">parse_filename</span><span class="p">)</span>
+
+<span class="c1"># Add the parsed information as new columns in the DataFrame</span>
+<span class="n">clean_df</span><span class="p">[[</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="s1">&#39;j&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">parsed_info</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>image_name</th>
+      <th>label</th>
+      <th>c</th>
+      <th>t</th>
+      <th>j</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_0.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_1.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_2.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_3.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_4.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4462</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_5.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4463</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_6.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4464</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_7.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>4465</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_8.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>4466</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_9.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>9</td>
+    </tr>
+  </tbody>
+</table>
+<p>3565 rows × 5 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;cj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;j&#39;</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>image_name</th>
+      <th>label</th>
+      <th>c</th>
+      <th>t</th>
+      <th>j</th>
+      <th>cj</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_0.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>0</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_1.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>1</td>
+      <td>101</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_2.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>2</td>
+      <td>102</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_3.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>3</td>
+      <td>103</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_4.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>4</td>
+      <td>104</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4462</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_5.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>5</td>
+      <td>405</td>
+    </tr>
+    <tr>
+      <th>4463</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_6.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>6</td>
+      <td>406</td>
+    </tr>
+    <tr>
+      <th>4464</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_7.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>7</td>
+      <td>407</td>
+    </tr>
+    <tr>
+      <th>4465</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_8.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>8</td>
+      <td>408</td>
+    </tr>
+    <tr>
+      <th>4466</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_9.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>9</td>
+      <td>409</td>
+    </tr>
+  </tbody>
+</table>
+<p>3565 rows × 6 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/processed_data/clean_labels.csv&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">objects</span> <span class="o">=</span> <span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;cj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[42]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">objects</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[42]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>array([100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 200, 201, 202,
+       203, 204, 205, 206, 207, 208, 209, 300, 301, 310, 311, 312, 302,
+       303, 304, 305, 306, 307, 308, 309, 400, 401, 410, 411, 412, 413,
+       414, 415, 416, 417, 418, 419, 402, 420, 421, 403, 404, 405, 406,
+       407, 408, 409])</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[49]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_test_values</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[50]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[59]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">num_test_values</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[63]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">test_values</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[63]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>array([107, 208, 402, 105, 419, 209, 301, 310, 202, 309, 401])</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">val_values</span> <span class="o">=</span> <span class="n">no</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[66]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_val_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">objects</span><span class="p">,</span> <span class="n">test_values</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[68]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_val_values</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.2</span><span class="o">*</span><span class="mf">0.8</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">objects</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[69]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">val_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">train_val_values</span><span class="p">,</span> <span class="n">num_val_values</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[76]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">determine_split</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">test_values</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;test&#39;</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val_values</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;val&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;train&#39;</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[77]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;split&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clean_df</span><span class="p">[</span><span class="s1">&#39;cj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">determine_split</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[78]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[78]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>image_name</th>
+      <th>label</th>
+      <th>c</th>
+      <th>t</th>
+      <th>j</th>
+      <th>cj</th>
+      <th>split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_0.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>0</td>
+      <td>100</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_1.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>1</td>
+      <td>101</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_2.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>2</td>
+      <td>102</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_3.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>3</td>
+      <td>103</td>
+      <td>val</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>cam1_f2023-05-30T10:30:13.705Z.jpg_4.png</td>
+      <td>Stage-1_Rebar</td>
+      <td>1</td>
+      <td>2023-05-30T10:30:13.705Z</td>
+      <td>4</td>
+      <td>104</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4462</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_5.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>5</td>
+      <td>405</td>
+      <td>val</td>
+    </tr>
+    <tr>
+      <th>4463</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_6.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>6</td>
+      <td>406</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>4464</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_7.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>7</td>
+      <td>407</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>4465</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_8.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>8</td>
+      <td>408</td>
+      <td>train</td>
+    </tr>
+    <tr>
+      <th>4466</th>
+      <td>cam4_f2023-06-27T17:00:34.057Z.jpg_9.png</td>
+      <td>Stage-6_Soil</td>
+      <td>4</td>
+      <td>2023-06-27T17:00:34.057Z</td>
+      <td>9</td>
+      <td>409</td>
+      <td>train</td>
+    </tr>
+  </tbody>
+</table>
+<p>3565 rows × 7 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[80]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clean_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/processed_data/clean_labels.csv&#39;</span><span class="p">)</span>
 </pre></div>
 
      </div>
