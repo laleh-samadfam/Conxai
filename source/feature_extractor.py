@@ -27,15 +27,15 @@ class ImageSequenceDataset(Dataset):
             if self.transform:
                 image = self.transform(image)
             images.append(image)
-        image_tensor = torch.stack(images, dim=0)
+        #image_tensor = torch.stack(images, dim=0)
         instance = sequence_folder.split(os.path.sep)[-1]
-        return image_tensor, instance
+        return images, instance
 
 
 # Function to extract ResNet features for an image
 def extract_resnet_features(image):
     with torch.no_grad():
-        features = resnet(image.squeeze(0))
+        features = resnet(image)
     return features.squeeze()
 
 
@@ -46,7 +46,7 @@ resnet = torch.nn.Sequential(*list(resnet.children())[:-1])
 resnet.eval()
 
 
-root_dir = '../data/processed_data/Task2/train'
+root_dir = '../data/processed_data/Task2/train/images'
 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -58,13 +58,16 @@ dataset = ImageSequenceDataset(root_dir, transform)
 dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 # Iterate through the DataLoader to extract features for each sequence
-for item, instance in dataloader:
-    features_tensor = extract_resnet_features(item)
-    features_tensor = torch.flatten(features_tensor, start_dim=1)
-    # Convert the features tensor to a numpy array
-    features = features_tensor.cpu().numpy()
+for images, instance_number in dataloader:
+    for i in range(len(images)):
+        features_tensor = extract_resnet_features(images[i])
+        # Convert the features tensor to a numpy array
+        features = features_tensor.cpu().numpy()
 
-    np.save('train_features/'+str(instance[0]) + '.npy', features)
+        directory_path = 'train_features/{}'.format(instance_number[0])
+        os.makedirs(directory_path, exist_ok=True)
+
+        np.save(os.path.join(directory_path, '{}.npy'.format(i)), features)
 
 
 
