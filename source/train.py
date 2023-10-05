@@ -71,10 +71,9 @@ def train_model(model, optimizer, scheduler, criterion, train_loader, valid_load
     valid_acc = []
 
     for epoch in range(num_epochs):
-
         # validation epoch
         model.eval()  # important for dropout and batch norms
-        accuracy, loss = eval_model(model=model, eval_loader=valid_loader,criterion=criterion, device=device)
+        accuracy, loss = eval_model(model=model, eval_loader=valid_loader, criterion=criterion, device=device)
         valid_acc.append(accuracy)
         val_loss.append(loss)
 
